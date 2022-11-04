@@ -29,6 +29,10 @@ public class ColorPickerVue implements Observer {
     private JSlider blueSlider = new JSlider(JSlider.HORIZONTAL, 0, 255, 0);
     private JTextField blueTextField = new JTextField("0", 3);
 
+    JPanel panelColorDisplay = new JPanel();
+    JTextField hexaTextField = new JTextField("#000000", 7);
+
+
 
     //--------------------------------------------------------------------------------Constructeur
     public ColorPickerVue(ColorPickerModel model, ColorPickerController controller, int posX, int posY) {
@@ -63,7 +67,13 @@ public class ColorPickerVue implements Observer {
 
         panel.add(panelColor);
 
-        JPanel panelColorDisplay = new JPanel();
+        JPanel panelHexaAndColorDisplay = new JPanel(new GridLayout(2, 1));
+        JTextField hexaTextField = new JTextField(
+                String.format("#%02x%02x%02x", model.getRed(), model.getGreen(), model.getBlue()), 7);
+        panelHexaAndColorDisplay.add(hexaTextField);
+
+
+
         panelColorDisplay.setBackground(
                 new Color(
                         model.getRed(),
@@ -71,7 +81,8 @@ public class ColorPickerVue implements Observer {
                         model.getBlue()
                 )
         );
-        panel.add(panelColorDisplay);
+        panelHexaAndColorDisplay.add(panelColorDisplay);
+        panel.add(panelHexaAndColorDisplay);
 
         colorPickerJFrame.add(panel, BorderLayout.CENTER);
 
@@ -85,6 +96,8 @@ public class ColorPickerVue implements Observer {
         redSlider.setValue(model.getRed());
         redTextField.setText(String.valueOf(model.getRed()));
 
+        //
+
         redTextField.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyReleased(java.awt.event.KeyEvent evt) {
                 redSlider.setValue(Integer.parseInt(redTextField.getText()));
@@ -94,6 +107,9 @@ public class ColorPickerVue implements Observer {
                                 greenSlider.getValue(),
                                 blueSlider.getValue()
                         )
+                );
+                hexaTextField.setText(
+                        String.format("#%02x%02x%02x", redSlider.getValue(), greenSlider.getValue(), blueSlider.getValue())
                 );
             }
         });
@@ -107,6 +123,9 @@ public class ColorPickerVue implements Observer {
                             greenSlider.getValue(),
                             blueSlider.getValue()
                     )
+            );
+            hexaTextField.setText(
+                    String.format("#%02x%02x%02x", redSlider.getValue(), greenSlider.getValue(), blueSlider.getValue())
             );
         });
 
@@ -126,6 +145,9 @@ public class ColorPickerVue implements Observer {
                                 blueSlider.getValue()
                         )
                 );
+                hexaTextField.setText(
+                        String.format("#%02x%02x%02x", redSlider.getValue(), greenSlider.getValue(), blueSlider.getValue())
+                );
             }
         });
         greenSlider.addChangeListener(e -> {
@@ -137,6 +159,9 @@ public class ColorPickerVue implements Observer {
                             greenSlider.getValue(),
                             blueSlider.getValue()
                     )
+            );
+            hexaTextField.setText(
+                    String.format("#%02x%02x%02x", redSlider.getValue(), greenSlider.getValue(), blueSlider.getValue())
             );
         });
 
@@ -156,6 +181,9 @@ public class ColorPickerVue implements Observer {
                                 blueSlider.getValue()
                         )
                 );
+                hexaTextField.setText(
+                        String.format("#%02x%02x%02x", redSlider.getValue(), greenSlider.getValue(), blueSlider.getValue())
+                );
             }
         });
         blueSlider.addChangeListener(e -> {
@@ -168,6 +196,9 @@ public class ColorPickerVue implements Observer {
                             blueSlider.getValue()
                     )
             );
+            hexaTextField.setText(
+                    String.format("#%02x%02x%02x", redSlider.getValue(), greenSlider.getValue(), blueSlider.getValue())
+            );
         });
 
         // start at controller value
@@ -176,11 +207,10 @@ public class ColorPickerVue implements Observer {
         blueSlider.setValue((int) model.getBlue());
 
 
-        // function for update the panelColorDisplay
+
 
 
     }
-
 
 
     protected ColorPickerModel model() {
