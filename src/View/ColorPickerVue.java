@@ -1,7 +1,6 @@
 package View;
 
 import Controller.ColorPickerController;
-import Model.ColorPickerModel;
 
 import javax.swing.*;
 import java.awt.*;
@@ -13,7 +12,6 @@ import java.util.Observer;
 public class ColorPickerVue implements Observer {
 
     //--------------------------------------------------------------------------------Atributs
-    private ColorPickerModel model;
     private ColorPickerController controller;
 
     // display 3 sliders for red, green and blue values
@@ -30,19 +28,17 @@ public class ColorPickerVue implements Observer {
     private JTextField blueTextField = new JTextField("0", 3);
 
     JPanel panelColorDisplay = new JPanel();
-    JTextField hexaTextField = new JTextField("#000000", 7);
+    JTextField hexaTextField = new JTextField("", 7);
 
 
 
     //--------------------------------------------------------------------------------Constructeur
-    public ColorPickerVue(ColorPickerModel model, ColorPickerController controller, int posX, int posY) {
+    public ColorPickerVue(ColorPickerController controller, int posX, int posY) {
+        this.controller = controller;
 
         // add 2 columns
         JPanel panel = new JPanel(new GridLayout(0, 2));
 
-        this.model = model;
-        this.controller = controller;
-        model.addObserver(this);
 
         JFrame colorPickerJFrame = new JFrame("Color Picker");
         colorPickerJFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -50,6 +46,7 @@ public class ColorPickerVue implements Observer {
         colorPickerJFrame.setLocation(posX, posY);
         colorPickerJFrame.setVisible(true);
 
+        // create the sliders and text fields for red, green and blue values
         JPanel panelRed = new JPanel(new GridLayout(0, 2));
         panelRed.add(redSlider);
         panelRed.add(redTextField);
@@ -67,20 +64,11 @@ public class ColorPickerVue implements Observer {
 
         panel.add(panelColor);
 
+        // create the color display
         JPanel panelHexaAndColorDisplay = new JPanel(new GridLayout(2, 1));
-        JTextField hexaTextField = new JTextField(
-                String.format("#%02x%02x%02x", model.getRed(), model.getGreen(), model.getBlue()), 7);
         panelHexaAndColorDisplay.add(hexaTextField);
 
 
-
-        panelColorDisplay.setBackground(
-                new Color(
-                        model.getRed(),
-                        model.getGreen(),
-                        model.getBlue()
-                )
-        );
         panelHexaAndColorDisplay.add(panelColorDisplay);
         panel.add(panelHexaAndColorDisplay);
 
@@ -93,133 +81,100 @@ public class ColorPickerVue implements Observer {
         redSlider.setMajorTickSpacing(20);
         redSlider.setMinorTickSpacing(5);
 
-        redSlider.setValue(model.getRed());
-        redTextField.setText(String.valueOf(model.getRed()));
-
-        //
+        redSlider.setValue(this.controller.getRed());
+        redTextField.setText(String.valueOf(this.controller.getRed()));
 
         redTextField.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyReleased(java.awt.event.KeyEvent evt) {
-                redSlider.setValue(Integer.parseInt(redTextField.getText()));
-                panelColorDisplay.setBackground(
-                        new Color(
-                                redSlider.getValue(),
-                                greenSlider.getValue(),
-                                blueSlider.getValue()
-                        )
-                );
-                hexaTextField.setText(
-                        String.format("#%02x%02x%02x", redSlider.getValue(), greenSlider.getValue(), blueSlider.getValue())
-                );
+                // modifier le model via le controller
+                controller.setRed(Integer.parseInt(redTextField.getText()));
             }
         });
 
         redSlider.addChangeListener(e -> {
             controller.setRed(redSlider.getValue());
-            redTextField.setText(String.valueOf(redSlider.getValue()));
-            panelColorDisplay.setBackground(
-                    new Color(
-                            redSlider.getValue(),
-                            greenSlider.getValue(),
-                            blueSlider.getValue()
-                    )
-            );
-            hexaTextField.setText(
-                    String.format("#%02x%02x%02x", redSlider.getValue(), greenSlider.getValue(), blueSlider.getValue())
-            );
         });
 
         greenSlider.setMajorTickSpacing(20);
         greenSlider.setMinorTickSpacing(5);
 
-        greenSlider.setValue(model.getGreen());
-        greenTextField.setText(String.valueOf(model.getGreen()));
+        greenSlider.setValue(this.controller.getGreen());
+        greenTextField.setText(String.valueOf(this.controller.getGreen()));
 
         greenTextField.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyReleased(java.awt.event.KeyEvent evt) {
-                greenSlider.setValue(Integer.parseInt(greenTextField.getText()));
-                panelColorDisplay.setBackground(
-                        new Color(
-                                redSlider.getValue(),
-                                greenSlider.getValue(),
-                                blueSlider.getValue()
-                        )
-                );
-                hexaTextField.setText(
-                        String.format("#%02x%02x%02x", redSlider.getValue(), greenSlider.getValue(), blueSlider.getValue())
-                );
+                // modifier le model via le controller
+                controller.setGreen(Integer.parseInt(greenTextField.getText()));
             }
         });
         greenSlider.addChangeListener(e -> {
             controller.setGreen(greenSlider.getValue());
-            greenTextField.setText(String.valueOf(greenSlider.getValue()));
-            panelColorDisplay.setBackground(
-                    new Color(
-                            redSlider.getValue(),
-                            greenSlider.getValue(),
-                            blueSlider.getValue()
-                    )
-            );
-            hexaTextField.setText(
-                    String.format("#%02x%02x%02x", redSlider.getValue(), greenSlider.getValue(), blueSlider.getValue())
-            );
         });
 
         blueSlider.setMajorTickSpacing(20);
         blueSlider.setMinorTickSpacing(5);
 
-        blueSlider.setValue(model.getBlue());
-        blueTextField.setText(String.valueOf(model.getBlue()));
+        blueSlider.setValue(this.controller.getBlue());
+        blueTextField.setText(String.valueOf(this.controller.getBlue()));
 
-        blueTextField.addKeyListener(new java.awt.event.KeyAdapter() {
+        this.blueTextField.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyReleased(java.awt.event.KeyEvent evt) {
-                blueSlider.setValue(Integer.parseInt(blueTextField.getText()));
-                panelColorDisplay.setBackground(
-                        new Color(
-                                redSlider.getValue(),
-                                greenSlider.getValue(),
-                                blueSlider.getValue()
-                        )
-                );
-                hexaTextField.setText(
-                        String.format("#%02x%02x%02x", redSlider.getValue(), greenSlider.getValue(), blueSlider.getValue())
-                );
+                // modifier le model via le controller
+                controller.setBlue(Integer.parseInt(blueTextField.getText()));
             }
         });
-        blueSlider.addChangeListener(e -> {
-            controller.setBlue(blueSlider.getValue());
-            blueTextField.setText(String.valueOf(blueSlider.getValue()));
-            panelColorDisplay.setBackground(
-                    new Color(
-                            redSlider.getValue(),
-                            greenSlider.getValue(),
-                            blueSlider.getValue()
-                    )
-            );
-            hexaTextField.setText(
-                    String.format("#%02x%02x%02x", redSlider.getValue(), greenSlider.getValue(), blueSlider.getValue())
-            );
+        this.blueSlider.addChangeListener(e -> {
+            this.controller.setBlue(this.blueSlider.getValue());
         });
 
         // start at controller value
-        redSlider.setValue((int) model.getRed());
-        greenSlider.setValue((int) model.getGreen());
-        blueSlider.setValue((int) model.getBlue());
+        this.redSlider.setValue(this.controller.getRed());
+        this.greenSlider.setValue(this.controller.getGreen());
+        this.blueSlider.setValue(this.controller.getBlue());
 
+        // create the color display
+        this.panelColorDisplay.setBackground(new Color(this.controller.getRed(), this.controller.getGreen(), this.controller.getBlue()));
 
-
-
-
+        this.hexaTextField.setText(
+                String.format("#%02x%02x%02x", this.controller.getRed(), this.controller.getGreen(), this.controller.getBlue())
+        );
     }
 
+    // method for changing the color of the color display
+    public void changeColorDisplay() {
+        this.panelColorDisplay.setBackground(
+                new Color(
+                        this.controller.getRed(),
+                        this.controller.getGreen(),
+                        this.controller.getBlue()
+                )
+        );
+    }
 
-    protected ColorPickerModel model() {
-        return model;
+    // method for changing the color of the color display
+    public void changeHexaTextField() {
+        this.hexaTextField.setText(
+                String.format("#%02x%02x%02x", this.controller.getRed(), this.controller.getGreen(), this.controller.getBlue())
+        );
     }
 
     @Override
     public void update(Observable o, Object arg) {
-        redSlider.setValue(model.getRed());
+        // red
+        this.redSlider.setValue(this.controller.getRed());
+        this.redTextField.setText(String.valueOf(this.controller.getRed()));
+        // green
+        this.greenSlider.setValue(this.controller.getGreen());
+        this.greenTextField.setText(String.valueOf(this.controller.getGreen()));
+        // blue
+        this.blueSlider.setValue(this.controller.getBlue());
+        this.blueTextField.setText(String.valueOf(this.controller.getBlue()));
+
+        // color display
+        this.changeColorDisplay();
+
+        // hexa
+        this.changeHexaTextField();
     }
 
 

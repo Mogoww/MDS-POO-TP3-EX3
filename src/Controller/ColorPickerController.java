@@ -39,6 +39,7 @@ public class ColorPickerController {
     }
     public void setVue(ColorPickerVue vue) {
         this.vue = vue;
+        this.model.addObserver(vue);
     }
 
 

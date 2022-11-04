@@ -17,6 +17,8 @@ public class ColorPickerModel extends Observable {
 
     public void setRed(int red) {
         this.red = red;
+        setChanged();
+        notifyObservers();
     }
 
     public int getGreen() {
@@ -25,6 +27,8 @@ public class ColorPickerModel extends Observable {
 
     public void setGreen(int green) {
         this.green = green;
+        setChanged();
+        notifyObservers();
     }
 
     public int getBlue() {
@@ -33,5 +37,7 @@ public class ColorPickerModel extends Observable {
 
     public void setBlue(int blue) {
         this.blue = blue;
+        setChanged();
+        notifyObservers();
     }
 }

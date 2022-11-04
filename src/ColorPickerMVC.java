@@ -8,7 +8,7 @@ public class ColorPickerMVC {
         ColorPickerModel model = new ColorPickerModel();
 
         ColorPickerController controller = new ColorPickerController(model);
-        ColorPickerVue vue = new ColorPickerVue(model, controller, 1000, 1000);
+        ColorPickerVue vue = new ColorPickerVue( controller, 1000, 1000);
         controller.setVue(vue);
     }
 
